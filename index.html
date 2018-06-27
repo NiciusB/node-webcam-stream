@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="/socket.io/socket.io.js"></script>
+  <head>
+  <body>
+    <canvas id="canvas"></canvas>
+    <div id="fps"></div>
+    <script>
+      var socket = io();
+      var canvas = document.getElementById("canvas");
+      var ctx = canvas.getContext("2d");
+      var times = [];
+      var fps;
+
+      function refreshLoop() {
+        const now = performance.now();
+        while (times.length > 0 && times[0] <= now - 1000) {
+          times.shift();
+        }
+        times.push(now);
+        fps = times.length;
+        document.getElementById('fps').innerHTML = fps + ' fps'
+      }
+
+      socket.on('imgdata', function (frame) {
+        var image = new Image();
+        image.src = "data:image/jpeg;base64," + frame.data;
+        image.onload = function() {
+          canvas.width = frame.width;
+          canvas.height = frame.height;
+          ctx.drawImage(image, 0, 0, frame.width, frame.height);
+          refreshLoop();
+        }
+      });
+    </script>
+  </body>
+</html>
