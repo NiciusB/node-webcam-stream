@@ -17,7 +17,7 @@ module.exports = {
     worker.process.on('message', response => {
       worker.queueSize--
       if (!worker.idList[response.id]) return console.error('No id found in worker idList')
-      worker.idList[response.id].resolve(response.frame)
+      worker.idList[response.id].resolve(response.response)
       delete worker.idList[response.id]
     })
 

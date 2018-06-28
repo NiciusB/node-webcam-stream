@@ -1,22 +1,20 @@
 const jpeg = require('jpeg-js');
 
-process.on('message', (data) => {
-  var {id, frame} = data
-  frame.data = Buffer.from(frame.data, 'base64')
-  var newFrameData = []
-  var newI = 0
-  var oldI = 0
-  while (oldI < frame.data.length) {
-    // list.splice( 1, 0, "baz"); // at index position 1, remove 0 elements, then add "baz" to that position
-    newFrameData[newI++] = frame.data[oldI++]; // red
-    newFrameData[newI++] = frame.data[oldI++]; // green
-    newFrameData[newI++] = frame.data[oldI++]; // blue
-    newFrameData[newI++] = 0xFF; // alpha - ignored in JPEGs
+process.on('message', (datafromarg) => {
+  let {id, frame} = datafromarg
+  let parsedRGB = Buffer.from(frame.data, 'base64')
+  frame.data = new Array(frame.width * frame.height * 4)
+  let newI = 0
+  let oldI = 0
+  while (oldI < parsedRGB.length) {
+    frame.data[newI++] = parsedRGB[oldI++]; // red
+    frame.data[newI++] = parsedRGB[oldI++]; // green
+    frame.data[newI++] = parsedRGB[oldI++]; // blue
+    frame.data[newI++] = 255; // alpha - ignored in JPEGs
   }
-  frame.data = newFrameData
   frame.data = jpeg.encode(frame, 97).data.toString('base64')
   process.send({
     id,
-    frame
+    response: frame
   })
 })

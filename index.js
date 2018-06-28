@@ -38,12 +38,10 @@ function getNextFrame() {
   getNextFrame()
 }
 
-
-
 setTimeout(() => {
   cam.start("/dev/video0", 640, 360)
   getNextFrame()
-}, 1000)
+}, 300)
 
 io.on('connection', function(socket){
   socket.on('error', function(err){
