@@ -18,7 +18,7 @@ function getNextFrame() {
 }
 
 setTimeout(() => {
-  cam.start("/dev/video0", 1024, 768)
+  cam.start("/dev/video0", 640, 360)
   getNextFrame()
 }, 1000)
 
