@@ -1,6 +1,7 @@
 var jpeg = require('jpeg-js');
 
 process.on('message', (frame) => {
+  frame.data = Buffer.from(frame.data, 'base64')
   var newFrameData = []
   var newI = 0
   var oldI = 0
